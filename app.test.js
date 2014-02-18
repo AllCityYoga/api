@@ -6,12 +6,12 @@ describe('express rest api server', function(){
   var apiVersion = 'v1';
 
   it('post object', function(done){
-    superagent.post('http://localhost:3000/' + apiVersion + '/test')
+    superagent.post('http://localhost:3000/users')
       .send({ name: 'John'
         , email: 'john@rpjs.co'
       })
       .end(function(e,res){
-        // console.log(res.body)
+        console.log(res.body)
         expect(e).to.eql(null)
         expect(res.body.length).to.eql(1)
         expect(res.body[0]._id.length).to.eql(24)
@@ -21,9 +21,9 @@ describe('express rest api server', function(){
   })
 
   it('retrieves an object', function(done){
-    superagent.get('http://localhost:3000/' + apiVersion + '/test/'+id)
+    superagent.get('http://localhost:3000/users/'+id)
       .end(function(e, res){
-        // console.log(res.body)
+        console.log(res.body)
         expect(e).to.eql(null)
         expect(typeof res.body).to.eql('object')
         expect(res.body._id.length).to.eql(24)        
@@ -33,7 +33,7 @@ describe('express rest api server', function(){
   })
 
   it('retrieves a collection', function(done){
-    superagent.get('http://localhost:3000/' + apiVersion + '/test')
+    superagent.get('http://localhost:3000/users')
       .end(function(e, res){
         // console.log(res.body)
         expect(e).to.eql(null)
@@ -44,7 +44,7 @@ describe('express rest api server', function(){
   })
 
   it('updates an object', function(done){
-    superagent.put('http://localhost:3000/' + apiVersion + '/test/'+id)
+    superagent.put('http://localhost:3000/users/'+id)
       .send({name: 'Peter'
         , email: 'peter@yahoo.com'})
       .end(function(e, res){
@@ -57,7 +57,7 @@ describe('express rest api server', function(){
   })
 
   it('checks an updated object', function(done){
-    superagent.get('http://localhost:3000/' + apiVersion + '/test/'+id)
+    superagent.get('http://localhost:3000/users/'+id)
       .end(function(e, res){
         // console.log(res.body)
         expect(e).to.eql(null)
@@ -69,7 +69,7 @@ describe('express rest api server', function(){
       })
   })    
   it('removes an object', function(done){
-    superagent.del('http://localhost:3000/' + apiVersion + '/test/'+id)
+    superagent.del('http://localhost:3000/users/'+id)
       .end(function(e, res){
         // console.log(res.body)
         expect(e).to.eql(null)

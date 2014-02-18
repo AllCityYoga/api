@@ -14,7 +14,7 @@ var mongo = require('mongoskin');
 var db = mongo.db([
     'localhost:27017/?auto_reconnect'
     ], {
-        database: 'allcityyoga-api',
+        database: 'acy-api',
         safe: true
     }
 );
@@ -45,7 +45,6 @@ var apiVersion = 'v1';
 
 // api parameters
 app.param('collectionName', function(req, res, next, collectionName){
-	req.collection = db.collection(collectionName);
 	req.route = collectionName;
 	return next()
 })
@@ -53,36 +52,15 @@ app.param('collectionName', function(req, res, next, collectionName){
 // routes
 app.get('/', routes.index);
 
-// TODO: send this to routes :collectionName
-app.get('/' + apiVersion + '/:collectionName',routes.users.list(db));
+app.get('/:collectionName',routes.dispatch(db, 'find'));
 
-app.post('/' + apiVersion + '/:collectionName', function(req, res) {
-	req.collection.insert(req.body, {}, function(e, results){
-		if (e) return next(e)
-		res.send(results)
-	});
-});
+app.post('/:collectionName',routes.dispatch(db, 'insert'));
 
-app.get('/' + apiVersion + '/:collectionName/:id', function(req, res) {
-	req.collection.findOne({_id: req.collection.id(req.params.id)}, function(e, result){
-		if (e) return next(e)
-		res.send(result)
-	});
-});
+app.get('/:collectionName/:id',routes.dispatch(db, 'findOne'));
 
-app.put('/' + apiVersion + '/:collectionName/:id', function(req, res) {
-	req.collection.update({_id: req.collection.id(req.params.id)}, {$set:req.body}, {safe:true, multi:false}, function(e, result){
-		if (e) return next(e)
-		res.send((result===1)?{msg:'success'}:{msg:'error'})
-	});
-});
+app.put('/:collectionName/:id',routes.dispatch(db, 'update'));
 
-app.del('/' + apiVersion + '/:collectionName/:id', function(req, res) {
-	req.collection.remove({_id: req.collection.id(req.params.id)}, function(e, result){
-		if (e) return next(e)
-		res.send((result===1)?{msg:'success'}:{msg:'error'})
-	});
-});
+app.del('/:collectionName/:id',routes.dispatch(db,'remove'));
 
 
 http.createServer(app).listen(app.get('port'), function(){
