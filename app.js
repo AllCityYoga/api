@@ -10,14 +10,30 @@ var http = require('http');
 var path = require('path');
 
 // Database
-var mongo = require('mongoskin');
-var db = mongo.db([
-    'localhost:27017/?auto_reconnect'
-    ], {
-        database: 'acy-api',
-        safe: true
-    }
-);
+
+// mongoose implementation
+var uristring = 
+  process.env.MONGOLAB_URI || 
+  process.env.MONGOHQ_URL || 
+  'mongodb://localhost/acy-api';
+var mongoose = require('mongoose');
+mongoose.connect(uristring, function (err, res) {
+  if (err) { 
+    console.log ('ERROR connecting to: ' + uristring + '. ' + err);
+  } else {
+    console.log ('Succeeded connected to: ' + uristring);
+  }
+});
+
+// mongoskin implementation
+// var mongo = require('mongoskin');
+// var db = mongo.db([
+//     'localhost:27017/?auto_reconnect'
+//     ], {
+//         database: 'acy-api',
+//         safe: true
+//     }
+// );
 
 
 var app = express();
@@ -52,15 +68,15 @@ app.param('collectionName', function(req, res, next, collectionName){
 // routes
 app.get('/', routes.index);
 
-app.get('/:collectionName',routes.dispatch(db, 'find'));
+app.get('/:collectionName',routes.dispatch('find'));
 
-app.post('/:collectionName',routes.dispatch(db, 'insert'));
+app.post('/:collectionName',routes.dispatch('insert'));
 
-app.get('/:collectionName/:id',routes.dispatch(db, 'findOne'));
+app.get('/:collectionName/:id',routes.dispatch('findOne'));
 
-app.put('/:collectionName/:id',routes.dispatch(db, 'update'));
+app.put('/:collectionName/:id',routes.dispatch('update'));
 
-app.del('/:collectionName/:id',routes.dispatch(db,'remove'));
+app.del('/:collectionName/:id',routes.dispatch('remove'));
 
 
 http.createServer(app).listen(app.get('port'), function(){

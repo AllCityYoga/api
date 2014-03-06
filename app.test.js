@@ -11,7 +11,7 @@ describe('express rest api server', function(){
         , email: 'john@rpjs.co'
       })
       .end(function(e,res){
-        console.log(res.body)
+        //console.log(res.body)
         expect(e).to.eql(null)
         expect(res.body.length).to.eql(1)
         expect(res.body[0]._id.length).to.eql(24)
@@ -23,7 +23,7 @@ describe('express rest api server', function(){
   it('retrieves an object', function(done){
     superagent.get('http://localhost:3000/users/'+id)
       .end(function(e, res){
-        console.log(res.body)
+        //console.log(res.body)
         expect(e).to.eql(null)
         expect(typeof res.body).to.eql('object')
         expect(res.body._id.length).to.eql(24)        

@@ -13,8 +13,8 @@ exports.index = function(req, res){
   res.render('index', { title: 'Express' });
 };
 
-exports.dispatch = function(db, method) {
+exports.dispatch = function(method) {
 	return function(req,res){
-		models[req.route][method](req,res,db);
+		models[req.route][method](req,res);
 	} 
 };
