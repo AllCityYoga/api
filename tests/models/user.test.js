@@ -12,14 +12,14 @@ mongoose.connect('mongodb://localhost/acy-api_test');
 describe('User Model', function(){
 
   var id;
+  var testUser = {
+    name: { first: 'John', last: '  Doe   ' },
+    age: 25,
+    email: 'johndoe@gmail.com'
+  };
 
   it('registers a user', function(done){
-    user.register({
-      name: { first: 'John', last: '  Doe   ' },
-      age: 25,
-      email: 'johndoe@gmail.com'
-    }, function(result){
-      //console.log(result.name);
+    user.register(testUser, function(result){
       id = result._id;
       result.name.first.should.equal('John');
       result.name.last.should.equal('Doe');
@@ -32,51 +32,48 @@ describe('User Model', function(){
     });  
   });
 
-  // it('retrieves a collection of users', function(done){
-  //   user.find({},function(e,result){
-  //     console.log('retrieves a collection: ' + result);
-  //     //expect(e).to.eql(null);
-  //     expect(result.length).to.be.above(0);
-  //     done();
-  //   });
-  // });
+  it('retrieves a collection of users', function(done){
+    user.findAll(function(result){
+      result.length.should.be.above(0);
+      done();
+    },function(e){
+      e.should.equal(null);
+    });
+  });
 
-  // it('retrives a user', function(done){
-  //   users.findOne({_id:id}, _id).exec(function(e,result){
-  //     console.log('retrieves a user: ' + result);
-  //     //expect(e).to.eql(null);
-  //     expect(result._id).to.contain(id);
-  //     done();
-  //   });
-  // });
+  it('finds a user by email', function(done){
+    user.findByEmail('johndoe@gmail.com', function(result){
+      expect(typeof result).to.eql('object');
+      result.email.should.equal(testUser.email);
+      done();
+    }, function(e){
+      e.should.equal(null);
+    });
+  });
 
-  // it('updates a user', function(done){
-  //   users.find({_id:id}).exec(function(e,result){
-  //     var testUser = result;
-  //     testUser.name.first = 'Unit';
-  //     testUser.name.last = 'Test';
-  //     testUser.age = '45';
-  //     testUser.email = 'unit@test.com';
-  //     testUser.save();
-  //   });
+  it('updates a user', function(done){
+    user.update(id, {
+      name: {
+        first: 'Unit',
+        last: 'Test'
+      },
+      age: 45,
+      email: 'unit@test.com'
+    }, function(e,result){
+      expect(typeof result).to.eql('object');
+      result.email.should.equal('unit@test.com');
+      result.age.should.equal(45);
+      result.name.first.should.equal('Unit');
+      result.name.last.should.equal('Test');
+      done();
+    });
+  });
 
-  //   users.find({_id: id}).exec(function(e,result){
-  //     expect(e).to.eql(null);
-  //     expect(result.name.first).to.eql('Unit');
-  //     expect(result.name.last).to.eql('Test');
-  //     expect(result.age).to.eql('45');
-  //     expect(result.email).to.eql('unit@test.com');
-  //     done();
-  //   });
-  // });
-
-  // // next test
-  // it('removes a user', function(done){
-  //   users.remove({_id: id}).exec(function(e,result){
-  //     expect(e).to.eql(null);
-  //     expect(result.length).to.eql(0);
-  //     done();
-  //   }); 
-  // })    
+  it('removes a user', function(done){
+    users.remove({_id: id}).exec(function(e,result){
+      expect(e).to.eql(null);
+      done();
+    }); 
+  })    
 
 });

@@ -13,8 +13,8 @@ var User = function(){
 		});
 	};
 
-	var _find = function(query,success, fail){
-		_model.find(query).exec(function(e,doc){
+	var _findAll = function(success, fail){
+		_model.find({}).exec(function(e,doc){
 			if (e) {
 				fail(e);
 			}else{
@@ -23,12 +23,28 @@ var User = function(){
 		});
 	};
 
+	var _findByEmail = function(email,success,fail){
+		_model.findOne({email: email},function(e,doc){
+			if(e){
+				fail(e);
+			}else{
+				success(doc);
+			}
+		});
+	};
+
+	var _update = function(id,json,callback){
+		_model.findByIdAndUpdate(id,json,callback)
+	};
+
+
 	return {
 		schema : userSchema,
 		model : _model,
 		register : _register,
-		find : _find
-
+		update : _update,
+		findAll : _findAll,
+		findByEmail : _findByEmail 
 	}
 }();
 
