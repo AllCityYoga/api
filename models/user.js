@@ -1,7 +1,7 @@
 var User = function(){
 	var mongoose = require("mongoose");
-	var userSchema = require('../schemas/user').schema;
-	var _model = mongoose.model('users', userSchema);
+	var _schema = require('../schemas/user');
+	var _model = mongoose.model('users', _schema);
 
 	var _register = function(json, success, fail){
 		_model.create(json, function (e,doc) {
@@ -44,7 +44,6 @@ var User = function(){
 	};
 
 	var _update = function(id,json,callback){
-		console.log(json);
 		_model.findByIdAndUpdate(id,json,callback);
 	};
 
@@ -54,7 +53,7 @@ var User = function(){
 
 
 	return {
-		schema : userSchema,
+		schema : _schema,
 		model : _model,
 		register : _register,
 		update : _update,

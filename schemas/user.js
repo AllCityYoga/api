@@ -1,15 +1,17 @@
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
+var Schema = function(){
+	var mongoose = require("mongoose");
+	var MSchema = mongoose.Schema;
 
-var userSchema = new Schema({
-  name: {
-    first: String,
-    last: { type: String, trim: true }
-  },
-  age: { type: Number, min: 0},
-  email: {type: String, trim: true}
-});
+	var _schema = new MSchema({
+	  name: {
+	    first: String,
+	    last: { type: String, trim: true }
+	  },
+	  age: { type: Number, min: 0},
+	  email: {type: String, trim: true}
+	});
 
-module.exports = {
-	schema: userSchema
-}
+	return _schema;
+}();
+
+module.exports = Schema;
