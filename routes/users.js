@@ -4,37 +4,39 @@ var user = require('../models/user');
  * GET users listing.
  */
 exports.find = function(req,res) {
-	db.collection('users').find({},{limit:10, sort: [['_id',-1]]}).toArray(function(e, results){
-		if (e) return next(e)
-		res.send(results)
+	user.findAll(function(result){
+		res.send(result);	
+	},function(e){
+		return next(e);
 	});
 };
 
 exports.insert = function(req,res){
-	// db.collection('users').insert(req.body, {}, function(e, results){
-	// 	if (e) return next(e)
-	// 	res.send(results)
-	// });
-	var tmpUser = user.register(req.body);
+	user.register(req.body,function(result){
+		res.send(result);
+	},function(e){
+		return next(e);	
+	});
 };
 
 exports.findOne = function(req,res){
-	db.collection('users').findOne({_id: db.collection('users').id(req.params.id)}, function(e, result){
-		if (e) return next(e)
-		res.send(result)
+	user.findById(req.params.id, function(result){
+		res.send(result);
+	},function(e){
+		return next(e);
 	});
 };
 
 exports.update = function(req,res){
-	db.collection('users').update({_id: db.collection('users').id(req.params.id)}, {$set:req.body}, {safe:true, multi:false}, function(e, result){
-		if (e) return next(e)
-		res.send((result===1)?{msg:'success'}:{msg:'error'})
+	user.update(req.params.id, req.body, function(e,result){
+		if (e) console.log(e);
+		res.send((result._id)?{msg:'success'}:{msg:'error'});	
 	});
 };
 
 exports.remove = function(req,res){
-	db.collection('users').remove({_id: db.collection('users').id(req.params.id)}, function(e, result){
-		if (e) return next(e)
+	user.unregister(req.params.id, function(e,result){
+		if (e) return next(e);
 		res.send((result===1)?{msg:'success'}:{msg:'error'})
 	});
 };

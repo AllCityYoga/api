@@ -33,8 +33,23 @@ var User = function(){
 		});
 	};
 
+	var _findById = function(id,success,fail){
+		_model.findOne({_id: id},function(e,doc){
+			if(e){
+				fail(e);
+			}else{
+				success(doc);
+			}
+		});
+	};
+
 	var _update = function(id,json,callback){
-		_model.findByIdAndUpdate(id,json,callback)
+		console.log(json);
+		_model.findByIdAndUpdate(id,json,callback);
+	};
+
+	var _unregister = function(id, callback){
+		_model.remove({_id: id}).exec(callback);
 	};
 
 
@@ -44,7 +59,9 @@ var User = function(){
 		register : _register,
 		update : _update,
 		findAll : _findAll,
-		findByEmail : _findByEmail 
+		findByEmail : _findByEmail,
+		unregister : _unregister,
+		findById : _findById
 	}
 }();
 

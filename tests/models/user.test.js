@@ -70,10 +70,10 @@ describe('User Model', function(){
   });
 
   it('removes a user', function(done){
-    users.remove({_id: id}).exec(function(e,result){
+    user.unregister(id,function(e,result){
       expect(e).to.eql(null);
       done();
-    }); 
+    });
   })    
 
 });
