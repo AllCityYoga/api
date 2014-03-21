@@ -1,20 +1,28 @@
 
-/*
- * GET home page.
- */
-var models = {
-	users: require('./users')
-};
+var Routes = function(){
+	var mongoose = require("mongoose");
+	var MSchema = mongoose.Schema;
 
-// TODO implement challenges api
-//var challenges = require('./challenges')
+	var _routes = {
+		users: require('./users'),
+		challenges: require('./challenges')
+	};
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
-};
+	// GET home page
+	var _index = function(req, res){
+	  res.render('index', { title: 'Express' });
+	};
 
-exports.dispatch = function(method) {
-	return function(req,res){
-		models[req.route][method](req,res);
-	} 
-};
+	var _dispatch = function(method) {
+		return function(req,res){
+			_routes[req.route][method](req,res);
+		} 
+	};
+
+	return {
+		index: _index,
+		dispatch: _dispatch
+	};
+}();
+
+module.exports = Routes;
