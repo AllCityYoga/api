@@ -8,7 +8,8 @@ var Schema = function(){
 	    last: { type: String, trim: true }
 	  },
 	  age: { type: Number, min: 0},
-	  email: {type: String, trim: true}
+	  email: {type: String, trim: true},
+	  challenge_ids: {type: Array, index: true}
 	});
 
 	return _schema;
