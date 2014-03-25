@@ -8,8 +8,9 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/acy-api_test');
 
 describe('express rest api server', function(){
-  var id
+  var id;
   var apiVersion = 'v1';
+  var challenge_id;
 
   it('posts a user', function(done){
     superagent.post('http://localhost:3000/users')
@@ -64,6 +65,33 @@ describe('express rest api server', function(){
         expect(e).to.eql(null)
         expect(typeof res.body).to.eql('object')
         expect(res.body.msg).to.eql('success')        
+        done()
+      })
+  });
+
+  it('adds a challenge to a user', function(done){
+    challenge_id = mongoose.Types.ObjectId();
+    superagent.put('http://localhost:3000/users/'+id+'/challenges/'+challenge_id)
+      .send({})
+      .end(function(e, res){
+        //console.log(res.body)
+        expect(e).to.eql(null)
+        expect(typeof res.body).to.eql('object')
+        expect(res.body.msg).to.eql('success')        
+        done()
+      })
+  });
+
+  it('checks the challenge was added to a user', function(done){
+    superagent.get('http://localhost:3000/users/'+id)
+      .end(function(e, res){
+        var result = res.body;
+        expect(e).to.eql(null);
+        expect(typeof result).to.eql('object');
+        expect(result._id).to.eql(id);
+        result.challenge_ids.length.should.equal(1);
+        result.challenges_count.should.equal(1);
+        result.challenge_ids[0].should.equal(challenge_id.toString());
         done()
       })
   })

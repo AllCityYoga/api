@@ -34,6 +34,13 @@ exports.update = function(req,res){
 	});
 };
 
+exports.updateRelation = function(req,res){
+	user.updateRelation(req.params.id, req.params.relation_id, function(e,result){
+		if (e) console.log(e);
+		res.send((result._id)?{msg:'success'}:{msg:'error'});	
+	});
+};
+
 exports.remove = function(req,res){
 	user.unregister(req.params.id, function(e,result){
 		if (e) return next(e);

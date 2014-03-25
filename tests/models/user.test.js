@@ -69,6 +69,16 @@ describe('User Model', function(){
     });
   });
 
+  it('adds a challenge to a user', function(done){
+    var challenge_id = mongoose.Types.ObjectId();
+    user.addChallenge(id, challenge_id, function(e,result){
+      console.log(result);
+      result.challenge_ids.length.should.equal(1);
+      result.challenges_count.should.equal(1);
+      done();
+    });
+  });
+
   it('removes a user', function(done){
     user.unregister(id,function(e,result){
       expect(e).to.eql(null);

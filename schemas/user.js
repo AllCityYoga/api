@@ -9,7 +9,8 @@ var Schema = function(){
 	  },
 	  age: { type: Number, min: 0},
 	  email: {type: String, trim: true},
-	  challenge_ids: {type: Array, index: true}
+	  challenge_ids: {type: Array, index: true},
+	  challenges_count: Number
 	});
 
 	return _schema;

@@ -76,6 +76,8 @@ app.get('/:collectionName/:id',routes.dispatch('findOne'));
 
 app.put('/:collectionName/:id',routes.dispatch('update'));
 
+app.put('/:collectionName/:id/:relation/:relation_id',routes.dispatch('updateRelation'));
+
 app.del('/:collectionName/:id',routes.dispatch('remove'));
 
 

@@ -43,8 +43,20 @@ var User = function(){
 		});
 	};
 
+	var _addChallenge = function(user_id,challenge_id,callback){
+		_update(user_id,{
+	      '$push': {challenge_ids: challenge_id},
+	      '$inc': {challenges_count: 1}
+	    },callback);
+	};
+
 	var _update = function(id,json,callback){
 		_model.findByIdAndUpdate(id,json,callback);
+	};
+
+	var _updateRelation = function(id,relation_id,callback){
+		// TODO: test code, refactor to generic
+		_addChallenge(id,relation_id,callback);
 	};
 
 	var _unregister = function(id, callback){
@@ -53,14 +65,16 @@ var User = function(){
 
 
 	return {
-		schema : _schema,
-		model : _model,
-		register : _register,
-		update : _update,
-		findAll : _findAll,
-		findByEmail : _findByEmail,
-		unregister : _unregister,
-		findById : _findById
+		schema: _schema,
+		model: _model,
+		register: _register,
+		update: _update,
+		updateRelation: _updateRelation,
+		findAll: _findAll,
+		findByEmail: _findByEmail,
+		unregister: _unregister,
+		findById: _findById,
+		addChallenge: _addChallenge
 	}
 }();
 
